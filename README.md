@@ -6,14 +6,14 @@ The Python interface to the Stanford Named Entity Recognizer.
 
     $ python setup.py install
 
-## Getting Started
+## Basic Usage
 
     >>> import ner
-    >>> tagger = ner.HttpNER(host='localhost', port='8080')
+    >>> tagger = ner.HttpNER(host='localhost', port=8080)
     >>> tagger.get_entities("University of California is located in California, United States")
     {'LOCATION': ['California', 'United States'],
      'ORGANIZATION': ['University of California']}
-    >>> tagger.json_entities("Alice wants to the Museum of Natural History.")
+    >>> tagger.json_entities("Alice went to the Museum of Natural History.")
     '{"ORGANIZATION": ["Museum of Natural History"], "PERSON": ["Alice"]}'
 
 ## Online Demo
@@ -26,6 +26,6 @@ BSD License
 
 ## Author
 
-PyNER is developed by maintained by Dat Hoang
+PyNER is developed by maintained by Dat Hoang.
 It can be found here: http://github.com/dat/pyner
 
