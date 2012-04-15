@@ -1,6 +1,6 @@
 # PyNER 
 
-The Python interface to the Stanford Named Entity Recognizer.
+The Python interface to the [Stanford Named Entity Recognizer](https://github.com/dat/stanford-ner).
 
 ## Installation
 
