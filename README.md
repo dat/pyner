@@ -2,6 +2,10 @@
 
 The Python interface to the [Stanford Named Entity Recognizer](https://github.com/dat/stanford-ner).
 
+## Project Homepage
+
+* [Stanford Named Entity Recognizer](http://nlp.stanford.edu/software/CRF-NER.shtml)
+
 ## Installation
 
     $ python setup.py install
@@ -18,7 +22,7 @@ The Python interface to the [Stanford Named Entity Recognizer](https://github.co
 
 ## Online Demo
 
-* [Stanford Named Entity Tagger](http://nlp.stanford.edu:8080/ner/)
+* [Graphical demo of several models](http://nlp.stanford.edu:8080/ner/)
 
 ## License
 
