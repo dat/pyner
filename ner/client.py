@@ -20,7 +20,7 @@ from .utils import (
 
 
 #regex patterns for various tagging options for entity parsing
-SLASHTAGS_EPATTERN  = re.compile(r'(.+?)/([A-Z]+)?\s*')
+SLASHTAGS_EPATTERN  = re.compile(r'(.+?)/([0-Z]+)?\s*')
 XML_EPATTERN        = re.compile(r'<wi num=".+?" entity="(.+?)">(.+?)</wi>')
 INLINEXML_EPATTERN  = re.compile(r'<([A-Z]+?)>(.+?)</\1>')
 
