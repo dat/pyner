@@ -13,9 +13,10 @@ def tcpip4_socket(host, port):
     try:
         s.connect((host, port))
         yield s
-    finally:
         s.shutdown(socket.SHUT_RDWR)
         s.close()
+    except:
+        pass
 
 @contextmanager
 def http_connection(host, port):
