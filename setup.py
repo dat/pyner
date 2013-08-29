@@ -21,6 +21,7 @@ specs = {
     'long_description' : description,
     'url' : 'http://github.com/dat/pyner',
     'author' : 'Dat Hoang',
+    'author_email' : 'dat.hoang@gmail.com',
     'keywords' : ['ner', 'stanford named entity recognizer', 'stanford named entity tagger'],
     'license' : 'BSD',
     'packages' : ['ner'],
