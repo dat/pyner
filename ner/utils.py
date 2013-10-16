@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
-import httplib
+try:
+    import http.client as httplib
+except ImportError:
+    import httplib
+
 import socket
 
 from contextlib import contextmanager

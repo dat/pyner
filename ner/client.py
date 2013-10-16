@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 
-import httplib
+try:
+    import http.client as httplib
+    from urllib.parse import urlencode
+except ImportError:
+    import httplib
+    from urllib import urlencode
+
 import json
 import re
 import socket
-import urllib
 
 from itertools import groupby
 from operator import itemgetter
@@ -27,14 +32,14 @@ INLINEXML_EPATTERN  = re.compile(r'<([A-Z]+?)>(.+?)</\1>')
 
 class NER(object):
     """Wrapper for server-based Stanford NER tagger."""
-    
+
     def tag_text(self, text):
         pass
 
     def __slashTags_parse_entities(self, tagged_text):
         """Return a list of token tuples (entity_type, token) parsed
         from slashTags-format tagged text.
-        
+
         :param tagged_text: slashTag-format entity tagged text
         """
         return (match.groups()[::-1] for match in
@@ -43,7 +48,7 @@ class NER(object):
     def __xml_parse_entities(self, tagged_text):
         """Return a list of token tuples (entity_type, token) parsed
         from xml-format tagged text.
-           
+
         :param tagged_text: xml-format entity tagged text
         """
         return (match.groups() for match in
@@ -52,7 +57,7 @@ class NER(object):
     def __inlineXML_parse_entities(self, tagged_text):
         """Return a list of entity tuples (entity_type, entity) parsed
         from inlineXML-format tagged text.
-        
+
         :param tagged_text: inlineXML-format tagged text
         """
         return (match.groups() for match in
@@ -61,15 +66,15 @@ class NER(object):
     def __collapse_to_dict(self, pairs):
         """Return a dictionary mapping the first value of every pair
         to a collapsed list of all the second values of every pair.
-    
+
         :param pairs: list of (entity_type, token) tuples
         """
-        return dict((first, map(itemgetter(1), second)) for (first, second)
+        return dict((first, list(map(itemgetter(1), second))) for (first, second)
             in groupby(sorted(pairs, key=itemgetter(0)), key=itemgetter(0)))
 
     def get_entities(self, text):
         """Return all the named entities in text as a dict.
-    
+
         :param text: string to parse entities
         :returns: a dict of entity type to list of entities of that type
         """
@@ -88,7 +93,7 @@ class NER(object):
 
     def json_entities(self, text):
         """Return a JSON encoding of named entities in text.
-        
+
         :param text: string to parse entities
         :returns: a JSON dump of entities parsed from text
         """
@@ -107,7 +112,7 @@ class SocketNER(NER):
 
     def tag_text(self, text):
         """Tag the text with proper named entities token-by-token.
-        
+
         :param text: raw text string to tag
         :returns: tagged text in given output format
         """
@@ -115,9 +120,11 @@ class SocketNER(NER):
             text = text.replace(s, '')
         text += '\n' #ensure end-of-line
         with tcpip4_socket(self.host, self.port) as s:
+            if not isinstance(text, bytes):
+                text = text.encode('utf-8')
             s.sendall(text)
             tagged_text = s.recv(10*len(text))
-        return tagged_text
+        return tagged_text.decode('utf-8')
 
 
 class HttpNER(NER):
@@ -136,7 +143,7 @@ class HttpNER(NER):
 
     def tag_text(self, text):
         """Tag the text with proper named entities token-by-token.
-        
+
         :param text: raw text strig to tag
         :returns: tagged text in given output format
         """
@@ -146,20 +153,20 @@ class HttpNER(NER):
         with http_connection(self.host, self.port) as c:
             headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept' : 'text/plain'}
             if self.classifier:
-                params = urllib.urlencode(
-                    {'input': text, 'outputFormat': self.oformat, 
-                    'preserveSpacing': self.spacing, 
+                params = urlencode(
+                    {'input': text, 'outputFormat': self.oformat,
+                    'preserveSpacing': self.spacing,
                     'classifier': self.classifier})
             else:
-                params = urllib.urlencode(
-                    {'input': text, 'outputFormat': self.oformat, 
+                params = urlencode(
+                    {'input': text, 'outputFormat': self.oformat,
                     'preserveSpacing': self.spacing})
             try:
                 c.request('POST', self.location, params, headers)
                 response = c.getresponse()
                 tagged_text = response.read()
-            except httplib.HTTPException, e:
-                print "Failed to post HTTP request."
+            except httplib.HTTPException as e:
+                print("Failed to post HTTP request.")
                 raise e
         return tagged_text
 
