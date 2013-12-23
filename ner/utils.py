@@ -20,8 +20,8 @@ def tcpip4_socket(host, port):
     finally:
         try:
             s.shutdown(socket.SHUT_RDWR)
-+       except socket.error:
-+           pass
+        except socket.error:
+            pass
         except OSError:
             pass
         finally:
