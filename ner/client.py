@@ -116,8 +116,7 @@ class SocketNER(NER):
         :param text: raw text string to tag
         :returns: tagged text in given output format
         """
-        for s in ('\f', '\n', '\r', '\t', '\v'): #strip whitespaces
-            text = text.replace(s, '')
+        text = re.sub(r'\s+', ' ', text) #collapse whitespaces
         text += '\n' #ensure end-of-line
         with tcpip4_socket(self.host, self.port) as s:
             if not isinstance(text, bytes):
@@ -147,8 +146,7 @@ class HttpNER(NER):
         :param text: raw text strig to tag
         :returns: tagged text in given output format
         """
-        for s in ('\f', '\n', '\r', '\t', '\v'): #strip whitespaces
-            text = text.replace(s, '')
+        text = re.sub(r'\s+', ' ', text) #collapse whitespaces
         text += '\n' #ensure end-of-line
         with http_connection(self.host, self.port) as c:
             headers = {'Content-type': 'application/x-www-form-urlencoded', 'Accept' : 'text/plain'}
