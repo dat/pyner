@@ -144,7 +144,7 @@ class HttpNER(NER):
     def tag_text(self, text):
         """Tag the text with proper named entities token-by-token.
 
-        :param text: raw text strig to tag
+        :param text: raw text string to tag
         :returns: tagged text in given output format
         """
         for s in ('\f', '\n', '\r', '\t', '\v'): #strip whitespaces
